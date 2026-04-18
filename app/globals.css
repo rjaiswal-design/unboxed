@@ -1,26 +1,164 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=JetBrains+Mono:wght@500;700;800&family=Inter:wght@300;400;500;600&display=swap");
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #111111;
+  --foreground: #f0f0f0;
+  --font-title: "Cormorant Garamond", Georgia, serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+  --orange: #ff5800;
+  --border: #2a2a2a;
+
+  /* Layout tokens */
+  --sidebar-w: 55px;
+  --sidebar-left: 0px;
+  --rail-left: 150px;
+  --content-left: 80px;
+  --content-width: 548px;
+  --content-right-gap: 30px;
+  --phone-w: 480px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Title */
+.title-stroke {
+  font-family: var(--font-title);
+  font-weight: 500;
+  font-size: 60px;
+  letter-spacing: -1.8px;
+  line-height: 1;
+  color: #f0f0f0;
+}
+
+/* Mono labels */
+.mono-label {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Gradient text fade */
+.text-fade {
+}
+
+/* Outline bar lines */
+.outline-line-major {
+  background-color: #f0f0f0;
+  height: 1px;
+  width: 40px;
+  margin-left: 15px;
+}
+
+.outline-line-minor {
+  background-color: #3a3a3a;
+  height: 1px;
+  width: 24px;
+  margin-left: 15px;
+}
+
+/* Scrollbar hide for phone mockup */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ── Responsive layout ─────────────────────────────────────────────────────── */
+
+/* md: hide phone, expand content to fill right */
+@media (max-width: 1279px) {
+  .phone-panel   { display: none !important; }
+  .article-main  { width: calc(100vw - var(--content-left) - var(--content-right-gap)) !important;
+                   max-width: var(--content-width); }
+}
+
+/* sm: collapse sidebar, shift content left */
+@media (max-width: 767px) {
+  .article-sidebar { display: none !important; }
+  .author-avatar   { display: none !important; }
+  .article-main  {
+    left: var(--content-right-gap) !important;
+    width: calc(100vw - 60px) !important;
+    max-width: none !important;
+  }
+  .article-header {
+    left: var(--content-right-gap) !important;
+  }
+}
+
+/* xs: shrink title */
+@media (max-width: 480px) {
+  .title-stroke { font-size: 36px !important; letter-spacing: -1px !important; }
+}
+
+/* ── Status tag ripple ────────────────────────────────────────────────────── */
+@keyframes ripple {
+  0%   { transform: scale(0.8); opacity: 0.7; }
+  100% { transform: scale(3);   opacity: 0; }
+}
+.live-ripple {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.live-ripple-ring {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4ade80;
+  animation: ripple 1.6s ease-out infinite;
+}
+.live-ripple-ring:nth-child(2) {
+  animation-delay: 0.6s;
+}
+.live-ripple-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4ade80;
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+/* ── Editor Panel ─────────────────────────────────────────────────────────── */
+
+.editor-title:empty::before {
+  content: attr(data-placeholder);
+  color: #2e2e2e;
+  pointer-events: none;
+  cursor: text;
+}
+
+.editor-description:empty::before {
+  content: attr(data-placeholder);
+  color: #2e2e2e;
+  pointer-events: none;
+  cursor: text;
+}
+
+/* Ensure contentEditable blocks in editor look clean */
+[data-block-id]:empty {
+  min-height: 1.5em;
 }
